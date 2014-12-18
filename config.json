@@ -1,0 +1,9 @@
+{
+  "channel": "sprawdzacze-bot-test",
+  "incomingWebHook": {
+    "uri": "SECRET"
+  },
+  "outgoingWebHook": {
+    "token": "SECRET"
+  }
+}
