@@ -2,51 +2,117 @@
 
 var //request = require('request'),
 	//config = require('./config.json'),
+	_ = require('underscore'),
 	patterns = {
-		changeStatus: /^(\+|\-)([1-4])/
+		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
 	},
 	state = {
 		numberOfPlayers: 0,
-		players: []
+		ids: []
 	};
 
-function addPlayers(userName, numberOfPlayers, res) {
-	if (state.players.indexOf(userName) === -1) {
-		state.players.push(userName);
-	}
+function addPlayers(numberOfPlayers, ids, res) {
+	var players,
+		payload,
+		i;
+
+	state.ids = _.union(state.ids, ids);
 	state.numberOfPlayers += numberOfPlayers;
 
-	console.log('####');
-	console.log(state);
+	players = ids.join(' ');
 
-	if (state.numberOfPlayers === 4) {
+	if (numberOfPlayers > ids.length) {
+		for (i = 0; i < numberOfPlayers - ids.length; i++) {
+			players += ' Anon :bandit:';
+		}
+	}
+
+	//console.log('#### ADD PLAYERS STATE');
+	//console.log(state);
+
+	if (state.numberOfPlayers >= 4) {
 		return startMatch(res);
 	} else {
-		return currentStatus(res);
+		payload = {
+			text: 'Added players',
+			attachments: [{
+				fallback: 'Players added: ' + players,
+				fields: [{
+					title: 'Players added',
+					value: players,
+					short: true
+				}, {
+					title: 'Current status',
+					value: state.numberOfPlayers + '/4',
+					short: true
+				}]
+			}]
+		};
+
+		return res.status(200).json(payload);
 	}
 }
 
-function removePlayers(userName, numberOfPlayers, res) {
-	var index = state.players.indexOf(userName);
-	if (index > -1) {
-		state.players.slice(index, 1);
-	}
+function removePlayers(numberOfPlayers, ids, res) {
+	var index,
+		idsRemoved = [],
+		players,
+		payload,
+		payloadFields = [];
 
 	if (state.numberOfPlayers > 0) {
-		state.numberOfPlayers -= numberOfPlayers;
+		ids.forEach(function (id) {
+			index = state.ids.indexOf(id);
+
+			if (index > -1) {
+				state.ids.slice(index, 1);
+				state.numberOfPlayers--;
+				idsRemoved.push(id);
+			}
+		});
 	}
 
-	console.log('####');
-	console.log(state);
+	players = idsRemoved.join(' ');
 
-	return currentStatus(res);
+	payloadFields.push({
+		title: 'Players removed',
+		value: players,
+		short: true
+	});
+
+	payloadFields.push({
+		title: 'Current status',
+		value: state.numberOfPlayers + '/4',
+		short: true
+	});
+
+	if (numberOfPlayers > ids.length) {
+		payloadFields.push({
+			title: 'Warning',
+			value: 'Please be more specific when removing players!'
+		})
+	}
+
+	payload = {
+		text: 'Removed players',
+		attachments: [{
+			fallback: 'Players removed: ' + players,
+			fields: payloadFields
+		}]
+	};
+
+	//console.log('#### REMOVE PLAYERS STATE');
+	//console.log(state);
+
+	return res.status(200).json(payload);
 }
 
 function startMatch(res) {
-	var players = state.players.join(' '),
+	var players = state.ids.join(' '),
 		payload = {
 			text: 'GO GO GO!',
 			attachments: [{
+				color: 'good',
 				fallback: 'Players: ' + players,
 				fields: [{
 					title: 'Players',
@@ -56,39 +122,64 @@ function startMatch(res) {
 		};
 
 	state.numberOfPlayers = 0;
-	state.players = [];
+	state.ids = [];
 
 	console.log('#### START MATCH');
 	return res.status(200).json(payload);
 }
 
-function currentStatus(res) {
-	var payload = {
-		text: state.numberOfPlayers + '/4'
+/*function currentStatus(res, messagePrefix) {
+	var payload;
+
+	if (messagePrefix) {
+		messagePrefix = messagePrefix + '; ';
+	} else {
+		messagePrefix = '';
+	}
+
+	payload = {
+		text: messagePrefix + 'Current status: ' + state.numberOfPlayers + '/4'
 	};
 
 	return res.status(200).json(payload);
-}
+}*/
 
 function emptyResponse(res) {
 	return res.status(200).end();
 }
 
 function parse(body, res) {
-	var userName = '@' + body.user_name,
-		matches = body.text.match(patterns.changeStatus),
+	var userId = '<@' + body.user_id + '>',
+		matches = body.text.match(patterns.change),
 		operator = '',
-		numberOfPlayers = 0;
+		numberOfPlayers = 0,
+		ids = [],
+		numberOfIds = 0;
 
-	console.log(matches);
+	console.log('##### MATCHES', matches);
 
 	if (matches) {
 		operator = matches[1];
 		numberOfPlayers = parseInt(matches[2], 10);
 
+		//TODO if number of players is bigger than free slots
+
+		if (matches[3]) {
+			ids = matches[3].split(' ');
+			numberOfIds = ids.length;
+
+			if (numberOfPlayers < numberOfIds) {
+				ids = ids.slice(0, numberOfPlayers);
+			}
+		}
+
+		if (numberOfPlayers > numberOfIds) {
+			ids.push(userId);
+		}
+
 		return (operator === '+') ?
-			addPlayers(userName, numberOfPlayers, res) :
-			removePlayers(userName, numberOfPlayers, res);
+			addPlayers(numberOfPlayers, ids, res) :
+			removePlayers(numberOfPlayers, ids, res);
 	} else {
 		return emptyResponse(res);
 	}

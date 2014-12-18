@@ -3,7 +3,7 @@
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	bot = require('./bot'),
-	config = require('./config.json'),
+	//config = require('./config.json'),
 	app = express(),
 	port = process.env.PORT || 3000;
 
@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (req, res, next, err) {
 	console.error(err.stack);
 	res.status(400).send(err.message);
 });
