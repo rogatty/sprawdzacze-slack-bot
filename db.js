@@ -11,8 +11,9 @@ function saveMatch(ids) {
 		.insert({
 			date_time: new Date()
 		})
-		.then(function (matchId) {
-			var players = [];
+		.then(function (matchRows) {
+			var players = [],
+				matchId = matchRows[0];
 
 			ids.forEach(function (id) {
 				players.push({
