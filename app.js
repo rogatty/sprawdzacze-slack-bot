@@ -3,6 +3,7 @@
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	bot = require('./bot'),
+	db = require('./db'),
 	//config = require('./config.json'),
 	app = express(),
 	port = process.env.PORT || 3000;
@@ -14,7 +15,7 @@ app.use(bodyParser.urlencoded({
 
 // test route
 app.get('/', function (req, res) {
-	res.status(200).send('Stop, you!')
+	res.status(200).send('Stop, you! This is db branch')
 });
 
 // error handler
@@ -28,3 +29,8 @@ app.listen(port, function () {
 });
 
 app.post('/bot', bot);
+
+app.get('/setdb', function (req, res) {
+	db.setUp();
+	res.status(200).send('It\'s being set up now');
+});
