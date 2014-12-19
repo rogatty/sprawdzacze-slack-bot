@@ -1,7 +1,7 @@
 'use strict';
 
 var //request = require('request'),
-	//config = require('./config.json'),
+	config = require('./config.json'),
 	_ = require('underscore'),
 	patterns = {
 		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
@@ -179,21 +179,21 @@ function reset(res) {
 function tooManyPlayers(res) {
 	var players = getListOfPlayers(state.ids, state.numberOfPlayers),
 		payload = {
-		text: 'You tried to add too many players, try again',
-		attachments: [{
-			color: 'danger',
-			fallback: 'Current players: ' + players,
-			fields: [{
-				value: players,
-				title: 'Current players',
-				short: true
-			}, {
-				title: 'Number of players',
-				value: state.numberOfPlayers + '/4',
-				short: true
+			text: 'You tried to add too many players, try again',
+			attachments: [{
+				color: 'danger',
+				fallback: 'Current players: ' + players,
+				fields: [{
+					value: players,
+					title: 'Current players',
+					short: true
+				}, {
+					title: 'Number of players',
+					value: state.numberOfPlayers + '/4',
+					short: true
+				}]
 			}]
-		}]
-	};
+		};
 
 	return res.status(200).json(payload);
 }
@@ -219,6 +219,14 @@ function getListOfPlayers(ids, numberOfPlayers) {
 	return players;
 }
 
+function help(res) {
+	var payload = {
+		text: config.helpMessage.join('\n')
+	};
+
+	return res.status(200).json(payload);
+}
+
 function parse(body, res) {
 	var userId = '<@' + body.user_id + '>',
 		matches = body.text.match(patterns.change),
@@ -233,6 +241,8 @@ function parse(body, res) {
 		return currentStatus(res);
 	} else if (body.text === 'reset') {
 		return reset(res);
+	} else if (body.text === 'help') {
+		return help(res);
 	} else if (matches) {
 		operator = matches[1];
 		numberOfPlayers = parseInt(matches[2], 10);

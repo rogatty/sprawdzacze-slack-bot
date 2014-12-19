@@ -5,5 +5,19 @@
   },
   "outgoingWebHook": {
     "token": "SECRET"
-  }
+  },
+  "helpMessage": [
+    "Possible commands:",
+    "",
+    "`+1` - you will be added.",
+    "`+1 @username` - _@username_ will be added.",
+    "`+2 @username` - you and _@username_ will be added.",
+    "`+2 @username1 @username2` - _@username1_ and _@username2_ will be added.",
+    "`+2` - you and Anon will be added, this is not recommended.",
+    "Obviously the same for 3 and 4 and with `-` as operator for removal.",
+    "",
+    "`status` - display the current status.",
+    "`reset` - reset the current status. _There is no way to remove Anons other than reset._",
+    "`help` - display this help to whole channel, this will be improved and sent as Direct (private) Message."
+  ]
 }
