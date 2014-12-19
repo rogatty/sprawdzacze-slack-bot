@@ -52,13 +52,13 @@ function test(res) {
 		.insert({
 			date_time: new Date()
 		})
-		.then(function (matchId) {
+		.then(function (matchRows) {
 			var players = [{
-				match_id: matchId,
+				match_id: matchRows[0],
 				user_id: 'terefere'
 			}];
 
-			console.log('matchId', matchId);
+			console.log('matchId', matchRows[0]);
 
 			knex('player')
 				.returning('id')
