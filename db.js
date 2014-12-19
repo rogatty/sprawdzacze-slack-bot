@@ -12,26 +12,30 @@ function saveMatch(ids) {
 			date_time: new Date()
 		})
 		.then(function (matchRows) {
-			var players = [],
-				matchId = matchRows[0];
+			savePlayers(matchRows, ids);
+		});
+}
 
-			//console.log('#### matchId', matchId);
+function savePlayers(matchRows, ids) {
+	var players = [],
+		matchId = matchRows[0];
 
+	//console.log('#### matchId', matchId);
+
+	ids.forEach(function (id) {
+		players.push({
+			match_id: matchId,
+			user_id: id
+		});
+	});
+
+	knex('player')
+		.returning('id')
+		.insert(players)
+		.then(function (ids) {
 			ids.forEach(function (id) {
-				players.push({
-					match_id: matchId,
-					user_id: id
-				});
+				//console.log('#### playerId', id);
 			});
-
-			knex('player')
-				.returning('id')
-				.insert(players)
-				.then(function (ids) {
-					ids.forEach(function (id) {
-						//console.log('#### playerId', id);
-					});
-				});
 		});
 }
 
