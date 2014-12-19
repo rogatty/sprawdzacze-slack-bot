@@ -1,11 +1,5 @@
 {
-  "channel": "sprawdzacze-bot-test",
-  "incomingWebHook": {
-    "uri": "SECRET"
-  },
-  "outgoingWebHook": {
-    "token": "SECRET"
-  },
+  "channel": "sprawdzacze",
   "helpMessage": [
     "Possible commands:",
     "",
