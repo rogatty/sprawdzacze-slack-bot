@@ -6,7 +6,8 @@ var //request = require('request'),
 	db = require('./db'),
 	stats = require('./stats'),
 	patterns = {
-		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
+		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/,
+		stats: /stats(?:\s(<@U.+>))?/
 	},
 	state = {
 		numberOfPlayers: 0,
@@ -273,19 +274,20 @@ function help(res) {
 
 function parse(body, res) {
 	var userId = '<@' + body.user_id + '>',
-		matches = body.text.match(patterns.change);
+		changeMatches = body.text.match(patterns.change),
+		statsMatches = body.text.match(patterns.stats);
 
 	//console.log('##### MATCHES', matches);
-	if (body.command === config.statsCommand) {
-		return stats(body, res);
-	} else if (body.text === 'status') {
+	if (body.text === 'status') {
 		return currentStatus(res);
 	} else if (body.text === 'reset') {
 		return reset(res);
 	} else if (body.text === 'help') {
 		return help(res);
-	} else if (matches) {
-		return changePlayers(matches, userId, res);
+	} else if (changeMatches) {
+		return changePlayers(changeMatches, userId, res);
+	} else if (statsMatches) {
+		return stats(statsMatches, userId, res);
 	} else {
 		return emptyResponse(res);
 	}
