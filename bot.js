@@ -13,19 +13,16 @@ var //request = require('request'),
 
 function addPlayers(numberOfPlayers, ids, res) {
 	var players,
-		payload,
-		i;
+		payload;
+
+	if (numberOfPlayers > 4 - state.numberOfPlayers) {
+		return tooManyPlayers(res);
+	}
 
 	state.ids = _.union(state.ids, ids);
 	state.numberOfPlayers += numberOfPlayers;
 
-	players = ids.join(' ');
-
-	if (numberOfPlayers > ids.length) {
-		for (i = 0; i < numberOfPlayers - ids.length; i++) {
-			players += ' Anon :bandit:';
-		}
-	}
+	players = getListOfPlayers(ids, numberOfPlayers);
 
 	//console.log('#### ADD PLAYERS STATE');
 	//console.log(state);
@@ -42,7 +39,7 @@ function addPlayers(numberOfPlayers, ids, res) {
 					value: players,
 					short: true
 				}, {
-					title: 'Current status',
+					title: 'Number of players',
 					value: state.numberOfPlayers + '/4',
 					short: true
 				}]
@@ -58,30 +55,40 @@ function removePlayers(numberOfPlayers, ids, res) {
 		idsRemoved = [],
 		players,
 		payload,
-		payloadFields = [];
+		payloadFields = [],
+		color = 'warning';
 
 	if (state.numberOfPlayers > 0) {
 		ids.forEach(function (id) {
 			index = state.ids.indexOf(id);
 
 			if (index > -1) {
-				state.ids.slice(index, 1);
+				state.ids.splice(index, 1);
 				state.numberOfPlayers--;
 				idsRemoved.push(id);
 			}
 		});
 	}
 
-	players = idsRemoved.join(' ');
+	if (idsRemoved.length) {
+		players = idsRemoved.join(' ');
+
+		payloadFields.push({
+			title: 'Players removed',
+			value: players,
+			short: true
+		});
+	} else {
+		color = 'danger';
+		payloadFields.push({
+			title: 'Warning',
+			value: 'No players were removed',
+			short: true
+		});
+	}
 
 	payloadFields.push({
-		title: 'Players removed',
-		value: players,
-		short: true
-	});
-
-	payloadFields.push({
-		title: 'Current status',
+		title: 'Number of players',
 		value: state.numberOfPlayers + '/4',
 		short: true
 	});
@@ -96,7 +103,8 @@ function removePlayers(numberOfPlayers, ids, res) {
 	payload = {
 		text: 'Removed players',
 		attachments: [{
-			fallback: 'Players removed: ' + players,
+			color: color,
+			//fallback: 'Players removed: ' + players,
 			fields: payloadFields
 		}]
 	};
@@ -108,7 +116,7 @@ function removePlayers(numberOfPlayers, ids, res) {
 }
 
 function startMatch(res) {
-	var players = state.ids.join(' '),
+	var players = getListOfPlayers(state.ids, state.numberOfPlayers),
 		payload = {
 			text: 'GO GO GO!',
 			attachments: [{
@@ -124,28 +132,91 @@ function startMatch(res) {
 	state.numberOfPlayers = 0;
 	state.ids = [];
 
-	console.log('#### START MATCH');
+	//console.log('#### START MATCH');
 	return res.status(200).json(payload);
 }
 
-/*function currentStatus(res, messagePrefix) {
-	var payload;
+function currentStatus(res) {
+	var players = getListOfPlayers(state.ids, state.numberOfPlayers),
+		payload = {
+			text: 'Current status',
+			attachments: [{
+				fallback: 'Players: ' + players,
+				fields: [{
+					title: 'Players',
+					value: players,
+					short: true
+				}, {
+					title: 'Number of players',
+					value: state.numberOfPlayers + '/4',
+					short: true
+				}]
+			}]
+		};
 
-	if (messagePrefix) {
-		messagePrefix = messagePrefix + '; ';
-	} else {
-		messagePrefix = '';
-	}
+	return res.status(200).json(payload);
+}
 
-	payload = {
-		text: messagePrefix + 'Current status: ' + state.numberOfPlayers + '/4'
+function reset(res) {
+	var payload = {
+		text: 'Status restarted, let\'s start from scratch',
+		attachments: [{
+			color: 'good',
+			fallback: 'Number of players: 0/0',
+			fields: [{
+				title: 'Number of players',
+				value: '0/0'
+			}]
+		}]
+	};
+
+	state.numberOfPlayers = 0;
+	state.ids = [];
+
+	return res.status(200).json(payload);
+}
+
+function tooManyPlayers(res) {
+	var players = getListOfPlayers(state.ids, state.numberOfPlayers),
+		payload = {
+		text: 'You tried to add too many players, try again',
+		attachments: [{
+			color: 'danger',
+			fallback: 'Current players: ' + players,
+			fields: [{
+				value: players,
+				title: 'Current players',
+				short: true
+			}, {
+				title: 'Number of players',
+				value: state.numberOfPlayers + '/4',
+				short: true
+			}]
+		}]
 	};
 
 	return res.status(200).json(payload);
-}*/
+}
 
 function emptyResponse(res) {
 	return res.status(200).end();
+}
+
+function getListOfPlayers(ids, numberOfPlayers) {
+	var players = ids.join(' '),
+		i;
+
+	if (numberOfPlayers > ids.length) {
+		for (i = 0; i < numberOfPlayers - ids.length; i++) {
+			players += ' :bandit:non';
+		}
+	}
+
+	if (players.length === 0) {
+		return 'No players';
+	}
+
+	return players;
 }
 
 function parse(body, res) {
@@ -156,13 +227,15 @@ function parse(body, res) {
 		ids = [],
 		numberOfIds = 0;
 
-	console.log('##### MATCHES', matches);
+	//console.log('##### MATCHES', matches);
 
-	if (matches) {
+	if (body.text === 'status') {
+		return currentStatus(res);
+	} else if (body.text === 'reset') {
+		return reset(res);
+	} else if (matches) {
 		operator = matches[1];
 		numberOfPlayers = parseInt(matches[2], 10);
-
-		//TODO if number of players is bigger than free slots
 
 		if (matches[3]) {
 			ids = matches[3].split(' ');
@@ -203,7 +276,7 @@ function parse(body, res) {
 module.exports = function (req, res, next) {
 	var userName = req.body.user_name;
 
-	console.log(req.body);
+	//console.log(req.body);
 
 	// avoid infinite loop
 	if (userName !== 'slackbot') {
