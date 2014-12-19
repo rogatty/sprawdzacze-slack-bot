@@ -7,7 +7,24 @@ var knex = require('knex')({
 });
 
 function saveMatch(ids) {
+	knex('match')
+		.returning('id')
+		.insert({
+			date_time: new Date()
+		})
+		.then(function (matchId) {
+			var players = [];
 
+			ids.forEach(function (id) {
+				players.push({
+					match_id: matchId,
+					user_id: id
+				});
+			});
+
+			knex('player')
+				.insert(players);
+		});
 }
 
 function setUp() {

@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
 
 // test route
 app.get('/', function (req, res) {
-	res.status(200).send('Stop, you! This is db branch')
+	res.status(200).send('Stop, you!');
 });
 
 // error handler
