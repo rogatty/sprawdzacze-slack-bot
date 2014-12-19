@@ -18,4 +18,16 @@ module.exports = function (body, res) {
 	if (!/<@U.+>/.test(statsFor)) {
 		return invalidUser(res);
 	}
+
+	var payload = {
+		text: 'Stats for ' + statsFor,
+		attachments: [{
+			color: 'good',
+			fields: [{
+				title: 'Test',
+				value: '1500 100 900'
+			}]
+		}]
+	};
+	res.status(200).json(payload);
 };
