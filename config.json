@@ -11,6 +11,8 @@
     "",
     "`status` - display the current status.",
     "`reset` - reset the current status. _There is no way to remove Anons other than reset._",
+    "`stats` - display stats for you",
+    "`stats @username` - display stats for _@username_",
     "`help` - display this help to whole channel, this will be improved and sent as Direct (private) Message.",
     "",
     "_In case of problems with the bot contact @igor_"
