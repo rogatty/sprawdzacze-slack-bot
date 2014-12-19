@@ -1,5 +1,6 @@
 {
-  "channel": "sprawdzacze",
+  "channel": "sprawdzacze-bot-test",
+  "statsCommand": "stats-test",
   "helpMessage": [
     "Possible commands:",
     "",

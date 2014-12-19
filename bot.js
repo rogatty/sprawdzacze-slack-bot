@@ -4,6 +4,7 @@ var //request = require('request'),
 	config = require('./config.json'),
 	//_ = require('underscore'),
 	db = require('./db'),
+	stats = require('./stats'),
 	patterns = {
 		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
 	},
@@ -276,7 +277,9 @@ function parse(body, res) {
 
 	//console.log('##### MATCHES', matches);
 
-	if (body.text === 'status') {
+	if (body.command === config.statsCommand) {
+		return stats(res);
+	} else if (body.text === 'status') {
 		return currentStatus(res);
 	} else if (body.text === 'reset') {
 		return reset(res);
