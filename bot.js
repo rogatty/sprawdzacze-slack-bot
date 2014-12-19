@@ -277,7 +277,7 @@ function parse(body, res) {
 		changeMatches = body.text.match(patterns.change),
 		statsMatches = body.text.match(patterns.stats);
 
-	//console.log('##### MATCHES', matches);
+	console.log('##### MATCHES', statsMatches);
 	if (body.text === 'status') {
 		return currentStatus(res);
 	} else if (body.text === 'reset') {
