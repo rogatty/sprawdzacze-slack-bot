@@ -15,6 +15,8 @@ function saveMatch(ids) {
 			var players = [],
 				matchId = matchRows[0];
 
+			console.log('#### matchId', matchId);
+
 			ids.forEach(function (id) {
 				players.push({
 					match_id: matchId,
@@ -23,8 +25,13 @@ function saveMatch(ids) {
 			});
 
 			knex('player')
+				.returning('id')
 				.insert(players)
-				.then(function () {});
+				.then(function (ids) {
+					ids.forEach(function (id) {
+						console.log('#### playerId', id);
+					});
+				});
 		});
 }
 
