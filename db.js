@@ -47,8 +47,6 @@ function setUp(res) {
 }
 
 function test(res) {
-	var debug = '';
-
 	knex('match')
 		.returning('id')
 		.insert({
@@ -60,18 +58,17 @@ function test(res) {
 				user_id: 'terefere'
 			}];
 
-			debug += 'matchId: ' + matchId;
-			res.status(200).send(debug);
+			console.log('matchId', matchId);
 
-			//knex('player')
-			//	.returning('id')
-			//	.insert(players)
-			//	.then(function (ids) {
-			//		ids.forEach(function (id) {
-			//			debug += ' playerId: ' + id;
-			//		});
-			//		res.status(200).send(debug);
-			//	});
+			knex('player')
+				.returning('id')
+				.insert(players)
+				.then(function (ids) {
+					ids.forEach(function (id) {
+						console.log('playerId', id);
+					});
+					res.status(200).send('ok');
+				});
 		});
 }
 
