@@ -46,9 +46,9 @@ function getNumberOfMatches(userId) {
 			.where({
 				user_id: userId
 			})
-			.count('match_id')
+			.count('match_id as CNT')
 			.then(function (rows) {
-				resolve(rows[0].match_id);
+				resolve(rows[0].CNT);
 			});
 	});
 }
