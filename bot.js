@@ -3,6 +3,7 @@
 var //request = require('request'),
 	config = require('./config.json'),
 	//_ = require('underscore'),
+	db = require('./db'),
 	patterns = {
 		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
 	},
@@ -168,6 +169,8 @@ function startMatch(res) {
 				}]
 			}]
 		};
+
+	db.saveMatch(state.ids);
 
 	state.numberOfPlayers = 0;
 	state.ids = [];
