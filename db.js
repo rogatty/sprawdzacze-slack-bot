@@ -61,16 +61,17 @@ function test(res) {
 			}];
 
 			debug += 'matchId: ' + matchId;
+			res.status(200).send(debug);
 
-			knex('player')
-				.returning('id')
-				.insert(players)
-				.then(function (ids) {
-					ids.forEach(function (id) {
-						debug += ' playerId: ' + id;
-					});
-					res.status(200).send(debug);
-				});
+			//knex('player')
+			//	.returning('id')
+			//	.insert(players)
+			//	.then(function (ids) {
+			//		ids.forEach(function (id) {
+			//			debug += ' playerId: ' + id;
+			//		});
+			//		res.status(200).send(debug);
+			//	});
 		});
 }
 
