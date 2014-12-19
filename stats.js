@@ -19,15 +19,8 @@ module.exports = function (body, res) {
 		return invalidUser(res);
 	}
 
-	var payload = {
-		text: 'Stats for ' + statsFor,
-		attachments: [{
-			color: 'good',
-			fields: [{
-				title: 'Test',
-				value: '1500 100 900'
-			}]
-		}]
-	};
-	res.status(200).json(payload);
+	db.getNumberOfMatches(statsFor)
+		.then(function (numberOfMatches) {
+			res.status(200).send('Stats for *' + statsFor + '*\n' + 'Matches played: ' + numberOfMatches);
+		});
 };
