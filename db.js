@@ -2,7 +2,7 @@
 
 var knex = require('knex')({
 	client: 'pg',
-	connection: process.env.HEROKU_POSTGRESQL_CHARCOAL_URL,
+	connection: process.env.DATABASE_URL,
 	ssl: true
 });
 
