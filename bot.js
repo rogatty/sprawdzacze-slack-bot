@@ -6,7 +6,7 @@ var //request = require('request'),
 	db = require('./db'),
 	stats = require('./stats'),
 	patterns = {
-		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/,
+		change: /^(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/,
 		stats: /stats(?:\s(<@U.+>))?/
 	},
 	state = {
