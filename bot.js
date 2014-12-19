@@ -13,16 +13,35 @@ var //request = require('request'),
 
 function addPlayers(numberOfPlayers, ids, res) {
 	var players,
-		payload;
+		idsAdded = [],
+		numberOfPlayersAdded = 0,
+		payload,
+		i;
 
 	if (numberOfPlayers > 4 - state.numberOfPlayers) {
 		return tooManyPlayers(res);
 	}
 
-	state.ids = _.union(state.ids, ids);
-	state.numberOfPlayers += numberOfPlayers;
+	for (i = 0; i < numberOfPlayers; i++) {
+		if (typeof ids[i] === 'undefined') {
+			//add Anon
+			state.numberOfPlayers++;
+			numberOfPlayersAdded++;
+		} else if (state.ids.indexOf(ids[i]) === -1) {
+			//add player if it's not a duplicate
+			state.ids.push(ids[i]);
+			state.numberOfPlayers++;
 
-	players = getListOfPlayers(ids, numberOfPlayers);
+			//track for the reply message
+			idsAdded.push(ids[i]);
+			numberOfPlayersAdded++;
+		}
+	}
+
+	//state.ids = _.union(state.ids, ids);
+	//state.numberOfPlayers += numberOfPlayers;
+
+	players = getListOfPlayers(idsAdded, numberOfPlayersAdded);
 
 	//console.log('#### ADD PLAYERS STATE');
 	//console.log(state);
