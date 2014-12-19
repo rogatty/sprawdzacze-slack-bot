@@ -48,7 +48,7 @@ function getNumberOfMatches(userId) {
 			})
 			.count('match_id')
 			.then(function (rows) {
-				resolve(rows[0]);
+				resolve(rows[0].match_id);
 			});
 	});
 }
