@@ -31,6 +31,5 @@ app.listen(port, function () {
 app.post('/bot', bot);
 
 app.get('/setdb', function (req, res) {
-	db.setUp();
-	res.status(200).send('It\'s being set up now. DB url is: ' + process.env.DATABASE_URL);
+	db.setUp(res);
 });
