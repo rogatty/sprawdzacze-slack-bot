@@ -2,7 +2,7 @@
 
 var //request = require('request'),
 	config = require('./config.json'),
-	_ = require('underscore'),
+	//_ = require('underscore'),
 	patterns = {
 		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
 	},
@@ -10,6 +10,30 @@ var //request = require('request'),
 		numberOfPlayers: 0,
 		ids: []
 	};
+
+function changePlayers(matches, userId, res) {
+	var operator = matches[1],
+		numberOfPlayers = parseInt(matches[2], 10),
+		ids = [],
+		numberOfIds = 0;
+
+	if (matches[3]) {
+		ids = matches[3].split(' ');
+		numberOfIds = ids.length;
+
+		if (numberOfPlayers < numberOfIds) {
+			ids = ids.slice(0, numberOfPlayers);
+		}
+	}
+
+	if (numberOfPlayers > numberOfIds) {
+		ids.push(userId);
+	}
+
+	return (operator === '+') ?
+		addPlayers(numberOfPlayers, ids, res) :
+		removePlayers(numberOfPlayers, ids, res);
+}
 
 function addPlayers(numberOfPlayers, ids, res) {
 	var players,
@@ -23,11 +47,7 @@ function addPlayers(numberOfPlayers, ids, res) {
 	}
 
 	for (i = 0; i < numberOfPlayers; i++) {
-		if (typeof ids[i] === 'undefined') {
-			//add Anon
-			state.numberOfPlayers++;
-			numberOfPlayersAdded++;
-		} else if (state.ids.indexOf(ids[i]) === -1) {
+		if (typeof ids[i] !== 'undefined' && state.ids.indexOf(ids[i]) === -1) {
 			//add player if it's not a duplicate
 			state.ids.push(ids[i]);
 			state.numberOfPlayers++;
@@ -35,11 +55,12 @@ function addPlayers(numberOfPlayers, ids, res) {
 			//track for the reply message
 			idsAdded.push(ids[i]);
 			numberOfPlayersAdded++;
+		} else {
+			//add Anon
+			state.numberOfPlayers++;
+			numberOfPlayersAdded++;
 		}
 	}
-
-	//state.ids = _.union(state.ids, ids);
-	//state.numberOfPlayers += numberOfPlayers;
 
 	players = getListOfPlayers(idsAdded, numberOfPlayersAdded);
 
@@ -248,11 +269,7 @@ function help(res) {
 
 function parse(body, res) {
 	var userId = '<@' + body.user_id + '>',
-		matches = body.text.match(patterns.change),
-		operator = '',
-		numberOfPlayers = 0,
-		ids = [],
-		numberOfIds = 0;
+		matches = body.text.match(patterns.change);
 
 	//console.log('##### MATCHES', matches);
 
@@ -263,25 +280,7 @@ function parse(body, res) {
 	} else if (body.text === 'help') {
 		return help(res);
 	} else if (matches) {
-		operator = matches[1];
-		numberOfPlayers = parseInt(matches[2], 10);
-
-		if (matches[3]) {
-			ids = matches[3].split(' ');
-			numberOfIds = ids.length;
-
-			if (numberOfPlayers < numberOfIds) {
-				ids = ids.slice(0, numberOfPlayers);
-			}
-		}
-
-		if (numberOfPlayers > numberOfIds) {
-			ids.push(userId);
-		}
-
-		return (operator === '+') ?
-			addPlayers(numberOfPlayers, ids, res) :
-			removePlayers(numberOfPlayers, ids, res);
+		return changePlayers(matches, userId, res);
 	} else {
 		return emptyResponse(res);
 	}
