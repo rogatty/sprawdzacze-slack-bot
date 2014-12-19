@@ -10,6 +10,16 @@ module.exports = function (statsMatches, userId, res) {
 
 	db.getNumberOfMatches(userId)
 		.then(function (numberOfMatches) {
-			res.status(200).send('Stats for *' + userId + '*\n' + 'Matches played: ' + numberOfMatches);
+			var payload = {
+				text: 'Stats for ' + userId,
+				attachments: [{
+					fields: [{
+						title: 'Number of matches',
+						value: numberOfMatches,
+						short: true
+					}]
+				}]
+			};
+			res.status(200).json(payload);
 		});
 };
