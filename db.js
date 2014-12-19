@@ -15,7 +15,7 @@ function saveMatch(ids) {
 			var players = [],
 				matchId = matchRows[0];
 
-			console.log('#### matchId', matchId);
+			//console.log('#### matchId', matchId);
 
 			ids.forEach(function (id) {
 				players.push({
@@ -29,7 +29,7 @@ function saveMatch(ids) {
 				.insert(players)
 				.then(function (ids) {
 					ids.forEach(function (id) {
-						console.log('#### playerId', id);
+						//console.log('#### playerId', id);
 					});
 				});
 		});
@@ -54,34 +54,7 @@ function setUp(res) {
 	});
 }
 
-function test(res) {
-	knex('match')
-		.returning('id')
-		.insert({
-			date_time: new Date()
-		})
-		.then(function (matchRows) {
-			var players = [{
-				match_id: matchRows[0],
-				user_id: 'terefere'
-			}];
-
-			console.log('matchId', matchRows[0]);
-
-			knex('player')
-				.returning('id')
-				.insert(players)
-				.then(function (ids) {
-					ids.forEach(function (id) {
-						console.log('playerId', id);
-					});
-					res.status(200).send('ok');
-				});
-		});
-}
-
 module.exports = {
 	saveMatch: saveMatch,
-	setUp: setUp,
-	test: test
+	setUp: setUp
 };

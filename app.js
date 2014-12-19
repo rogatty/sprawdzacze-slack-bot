@@ -33,7 +33,3 @@ app.post('/bot', bot);
 app.get('/setdb', function (req, res) {
 	db.setUp(res);
 });
-
-app.get('/testdb', function (req, res) {
-	db.test(res);
-});
