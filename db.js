@@ -21,8 +21,6 @@ function savePlayers(matchRows, ids) {
 	var players = [],
 		matchId = matchRows[0];
 
-	//console.log('#### matchId', matchId);
-
 	ids.forEach(function (id) {
 		players.push({
 			match_id: matchId,
