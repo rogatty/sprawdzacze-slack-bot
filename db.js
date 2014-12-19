@@ -41,18 +41,16 @@ function savePlayers(matchRows, ids) {
 }
 
 function getNumberOfMatches(userId) {
-	var promise = new Promise();
-
-	knex('player')
-		.where({
-			user_id: userId
-		})
-		.count('match_id')
-		.then(function (rows) {
-			promise.resolve(rows[0]);
-		});
-
-	return promise;
+	return new Promise(function (resolve) {
+		knex('player')
+			.where({
+				user_id: userId
+			})
+			.count('match_id')
+			.then(function (rows) {
+				resolve(rows[0]);
+			});
+	});
 }
 
 function setUp(res) {
