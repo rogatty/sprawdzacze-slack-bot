@@ -276,8 +276,6 @@ function parse(body, res) {
 		matches = body.text.match(patterns.change);
 
 	//console.log('##### MATCHES', matches);
-
-	console.log('####', body, config.statsCommand);
 	if (body.command === config.statsCommand) {
 		return stats(res);
 	} else if (body.text === 'status') {
