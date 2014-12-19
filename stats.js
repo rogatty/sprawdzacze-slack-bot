@@ -15,6 +15,8 @@ module.exports = function (body, res) {
 		statsFor = userId;
 	}
 
+	console.log('####', statsFor);
+
 	if (!/<@U.+>/.test(statsFor)) {
 		return invalidUser(res);
 	}
