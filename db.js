@@ -22,7 +22,8 @@ function saveMatch(ids) {
 			});
 
 			knex('player')
-				.insert(players);
+				.insert(players)
+				.then(function () {});
 		});
 }
 
