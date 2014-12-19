@@ -46,7 +46,36 @@ function setUp(res) {
 	});
 }
 
+function test(res) {
+	var debug = '';
+
+	knex('match')
+		.returning('id')
+		.insert({
+			date_time: new Date()
+		})
+		.then(function (matchId) {
+			var players = [{
+				match_id: matchId,
+				user_id: 'terefere'
+			}];
+
+			debug += 'matchId: ' + matchId;
+
+			knex('player')
+				.returning('id')
+				.insert(players)
+				.then(function (ids) {
+					ids.forEach(function (id) {
+						debug += ' playerId: ' + id;
+					});
+					res.status(200).send(debug);
+				});
+		});
+}
+
 module.exports = {
 	saveMatch: saveMatch,
-	setUp: setUp
+	setUp: setUp,
+	test: test
 };
