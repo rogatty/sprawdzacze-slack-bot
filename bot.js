@@ -2,10 +2,11 @@
 
 var //request = require('request'),
 	config = require('./config.json'),
-	//_ = require('underscore'),
 	db = require('./db'),
+	stats = require('./stats'),
 	patterns = {
-		change: /(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/
+		change: /^(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/,
+		stats: /stats(?:\s(<@U.+>))?/
 	},
 	state = {
 		numberOfPlayers: 0,
@@ -64,9 +65,6 @@ function addPlayers(numberOfPlayers, ids, res) {
 	}
 
 	players = getListOfPlayers(idsAdded, numberOfPlayersAdded);
-
-	//console.log('#### ADD PLAYERS STATE');
-	//console.log(state);
 
 	if (state.numberOfPlayers >= 4) {
 		return startMatch(res);
@@ -145,13 +143,9 @@ function removePlayers(numberOfPlayers, ids, res) {
 		text: 'Removed players',
 		attachments: [{
 			color: color,
-			//fallback: 'Players removed: ' + players,
 			fields: payloadFields
 		}]
 	};
-
-	//console.log('#### REMOVE PLAYERS STATE');
-	//console.log(state);
 
 	return res.status(200).json(payload);
 }
@@ -175,7 +169,6 @@ function startMatch(res) {
 	state.numberOfPlayers = 0;
 	state.ids = [];
 
-	//console.log('#### START MATCH');
 	return res.status(200).json(payload);
 }
 
@@ -272,9 +265,8 @@ function help(res) {
 
 function parse(body, res) {
 	var userId = '<@' + body.user_id + '>',
-		matches = body.text.match(patterns.change);
-
-	//console.log('##### MATCHES', matches);
+		changeMatches = body.text.match(patterns.change),
+		statsMatches = body.text.match(patterns.stats);
 
 	if (body.text === 'status') {
 		return currentStatus(res);
@@ -282,32 +274,17 @@ function parse(body, res) {
 		return reset(res);
 	} else if (body.text === 'help') {
 		return help(res);
-	} else if (matches) {
-		return changePlayers(matches, userId, res);
+	} else if (changeMatches) {
+		return changePlayers(changeMatches, userId, res);
+	} else if (statsMatches) {
+		return stats(statsMatches, userId, res);
 	} else {
 		return emptyResponse(res);
 	}
 }
 
-/*function send(payload) {
-	request({
-		uri: config.incomingWebHook.uri,
-		method: 'POST',
-		body: JSON.stringify(payload)
-	}, function (error, response, body) {
-		if (error) {
-			throw new Error('We have an error: ' + error.message);
-		} else if (response.statusCode !== 200) {
-			throw new Error('We have an incorrect response (status code ' + response.statusCode + '): ' + body);
-		}
-		//console.log(error, response, body);
-	});
-}*/
-
-module.exports = function (req, res, next) {
+module.exports = function (req, res) {
 	var userName = req.body.user_name;
-
-	//console.log(req.body);
 
 	// avoid infinite loop
 	if (userName !== 'slackbot') {

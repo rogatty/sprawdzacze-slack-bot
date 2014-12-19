@@ -1,9 +1,10 @@
 'use strict';
 
 var knex = require('knex')({
-	client: 'pg',
-	connection: process.env.DATABASE_URL
-});
+		client: 'pg',
+		connection: process.env.DATABASE_URL
+	}),
+	Promise = require('bluebird');
 
 function saveMatch(ids) {
 	knex('match')
@@ -20,8 +21,6 @@ function savePlayers(matchRows, ids) {
 	var players = [],
 		matchId = matchRows[0];
 
-	//console.log('#### matchId', matchId);
-
 	ids.forEach(function (id) {
 		players.push({
 			match_id: matchId,
@@ -37,6 +36,19 @@ function savePlayers(matchRows, ids) {
 				//console.log('#### playerId', id);
 			});
 		});
+}
+
+function getNumberOfMatches(userId) {
+	return new Promise(function (resolve) {
+		knex('player')
+			.where({
+				user_id: userId
+			})
+			.count('match_id as CNT')
+			.then(function (rows) {
+				resolve(rows[0].CNT);
+			});
+	});
 }
 
 function setUp(res) {
@@ -59,6 +71,7 @@ function setUp(res) {
 }
 
 module.exports = {
+	getNumberOfMatches: getNumberOfMatches,
 	saveMatch: saveMatch,
 	setUp: setUp
 };
