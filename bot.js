@@ -277,7 +277,7 @@ function parse(body, res) {
 
 	//console.log('##### MATCHES', matches);
 	if (body.command === config.statsCommand) {
-		return stats(res);
+		return stats(body, res);
 	} else if (body.text === 'status') {
 		return currentStatus(res);
 	} else if (body.text === 'reset') {
