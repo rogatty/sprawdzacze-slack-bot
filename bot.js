@@ -94,10 +94,9 @@ function addPlayers(numberOfPlayers, ids, res) {
 function removePlayers(numberOfPlayers, ids, res) {
 	var index,
 		idsRemoved = [],
+		playersRemoved,
 		players,
-		payload,
-		payloadFields = [],
-		color = 'warning';
+		payload;
 
 	if (state.numberOfPlayers > 0) {
 		ids.forEach(function (id) {
@@ -112,42 +111,29 @@ function removePlayers(numberOfPlayers, ids, res) {
 	}
 
 	if (idsRemoved.length) {
-		players = idsRemoved.join(' ');
+		playersRemoved = idsRemoved.join(' ');
+		players = getListOfPlayers(state.ids, state.numberOfPlayers);
 
-		payloadFields.push({
-			title: 'Players removed',
-			value: players,
-			short: true
-		});
+		payload = {
+			text: 'Removed players ' + playersRemoved,
+			attachments: [{
+				color: 'warning',
+				fields: [{
+					title: 'Current players',
+					value: players,
+					short: true
+				}, {
+					title: 'Number of players',
+					value: state.numberOfPlayers + '/4',
+					short: true
+				}]
+			}]
+		};
 	} else {
-		color = 'danger';
-		payloadFields.push({
-			title: 'Warning',
-			value: 'No players were removed',
-			short: true
-		});
+		payload = {
+			text: 'No players were removed, try `help` if you have problems'
+		};
 	}
-
-	payloadFields.push({
-		title: 'Number of players',
-		value: state.numberOfPlayers + '/4',
-		short: true
-	});
-
-	if (numberOfPlayers > ids.length) {
-		payloadFields.push({
-			title: 'Warning',
-			value: 'Please be more specific when removing players!'
-		})
-	}
-
-	payload = {
-		text: 'Removed players',
-		attachments: [{
-			color: color,
-			fields: payloadFields
-		}]
-	};
 
 	return res.status(200).json(payload);
 }
