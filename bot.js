@@ -6,7 +6,7 @@ var //request = require('request'),
 	stats = require('./stats'),
 	patterns = {
 		change: /^(\+|\-)([1-4])\s*((?:\s*<@U.+>)*)/,
-		stats: /stats(?:\s(<@U.+>))?/
+		stats: /^stats(?:\s(<@U.+>))?/
 	},
 	state = {
 		numberOfPlayers: 0,
@@ -38,7 +38,8 @@ function changePlayers(matches, userId, res) {
 }
 
 function addPlayers(numberOfPlayers, ids, res) {
-	var players,
+	var playersAdded,
+		players,
 		idsAdded = [],
 		numberOfPlayersAdded = 0,
 		payload,
@@ -64,17 +65,18 @@ function addPlayers(numberOfPlayers, ids, res) {
 		}
 	}
 
-	players = getListOfPlayers(idsAdded, numberOfPlayersAdded);
+	playersAdded = getListOfPlayers(idsAdded, numberOfPlayersAdded);
+	players = getListOfPlayers(state.ids, state.numberOfPlayers);
 
 	if (state.numberOfPlayers >= 4) {
 		return startMatch(res);
 	} else {
 		payload = {
-			text: 'Added players',
+			text: 'Added players ' + playersAdded,
 			attachments: [{
-				fallback: 'Players added: ' + players,
+				fallback: 'Current players: ' + players,
 				fields: [{
-					title: 'Players added',
+					title: 'Current players',
 					value: players,
 					short: true
 				}, {
@@ -220,8 +222,8 @@ function tooManyPlayers(res) {
 				color: 'danger',
 				fallback: 'Current players: ' + players,
 				fields: [{
-					value: players,
 					title: 'Current players',
+					value: players,
 					short: true
 				}, {
 					title: 'Number of players',
