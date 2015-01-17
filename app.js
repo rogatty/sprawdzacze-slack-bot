@@ -19,11 +19,10 @@ app.use(bodyParser.urlencoded({
 // middleware for easy rendering async query
 app.use(require('express-promise')());
 
-// index
-app.route('/')
-	.get(function (req, res) {
-		res.status(200).send('<html><body><img src="' + config.slapGif + '"></body></html>');
-	});
+// static assets
+app.use(express.static(__dirname + '/public'));
+
+app.set('view engine', 'hbs');
 
 // error handler
 app.use(function (req, res, next, err) {
@@ -35,9 +34,15 @@ app.listen(port, function () {
 	console.log('Slack bot listening on port ' + port);
 });
 
+// index
+app.route('/')
+	.get(function (req, res) {
+		res.status(200).send('<html><body><img src="' + config.slapGif + '"></body></html>');
+	});
+
 app.route('/bot').post(bot);
 
-//app.route('/dashboard/:secret').get(dashboard);
+app.route('/dashboard/:secret').get(dashboard);
 
 app.route('/stats/:secret').get(stats);
 
