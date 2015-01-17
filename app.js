@@ -39,7 +39,7 @@ app.route('/bot').post(bot);
 
 //app.route('/dashboard/:secret').get(dashboard);
 
-app.route('/stats/:hash').get(stats);
+app.route('/stats/:secret').get(stats);
 
 app.route('/setdb')
 	.get(function (req, res) {
