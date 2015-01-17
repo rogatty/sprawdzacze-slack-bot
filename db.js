@@ -9,6 +9,9 @@ function save(slackIds) {
 		.then(getUserIds)
 		.then(function (matchId, userIds) {
 			console.log('##########', matchId, userIds);
+		})
+		.catch(function (error) {
+			console.log(error);
 		});
 		//.then(savePlayers);
 }
@@ -28,12 +31,14 @@ function saveMatch(slackIds) {
 }
 
 function getUserIds(matchId, slackIds) {
+	console.log('######', matchId, slackIds);
 	return new Promise(function (resolve) {
 		var userIds = [];
 
 		slackIds.forEach(function (slackId) {
 			userIds.push(getUserId(slackId));
 		});
+		console.log('######', userIds);
 
 		resolve(matchId, Promise.all(userIds));
 	});
