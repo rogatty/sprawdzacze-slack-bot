@@ -15,6 +15,9 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
+// middleware for easy rendering async query
+app.use(require('express-promise')());
+
 // index
 app.route('/')
 	.get(function (req, res) {
