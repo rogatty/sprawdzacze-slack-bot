@@ -31,5 +31,12 @@ app.listen(port, function () {
 app.post('/bot', bot);
 
 app.get('/setdb', function (req, res) {
-	db.setUp(res);
+	db
+		.setUp()
+		.then(function (msg) {
+			res.status(200).send(msg);
+		})
+		.catch(function (error) {
+			res.status(500).send(error);
+		});
 });

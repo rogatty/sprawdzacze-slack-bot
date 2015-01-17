@@ -1,13 +1,14 @@
 'use strict';
 
-var knex = require('knex')({
+var db = require('knex')({
 		client: 'pg',
 		connection: process.env.DATABASE_URL
 	}),
+	dbCreate = require('./dbCreate'),
 	Promise = require('bluebird');
 
 function saveMatch(ids) {
-	knex('match')
+	db('match')
 		.returning('id')
 		.insert({
 			date_time: new Date()
@@ -28,7 +29,7 @@ function savePlayers(matchRows, ids) {
 		});
 	});
 
-	knex('player')
+	db('player')
 		.returning('id')
 		.insert(players)
 		.then(function (ids) {
@@ -40,7 +41,7 @@ function savePlayers(matchRows, ids) {
 
 function getNumberOfMatches(userId) {
 	return new Promise(function (resolve) {
-		knex('player')
+		db('player')
 			.where({
 				user_id: userId
 			})
@@ -51,21 +52,21 @@ function getNumberOfMatches(userId) {
 	});
 }
 
-function setUp(res) {
-	knex.schema.createTable('match', function (table) {
-		table.increments();
-		table.dateTime('date_time');
-	}).then(function () {
-		knex.schema.createTable('player', function (table) {
-			table.increments();
-			table.string('user_id');
-			table.integer('match_id')
-				.unsigned()
-				.references('id')
-				.inTable('match')
-				.onDelete('CASCADE');
-		}).then(function () {
-			res.status(200).send('It\'s set up now.');
+function setUp() {
+	return new Promise(function (resolve, reject) {
+		db.schema.hasTable('user').then(function (exists) {
+			if (exists) {
+				reject('Database is already set up');
+			} else {
+				dbCreate
+					.createTables(db)
+					.then(function () {
+						resolve('Database was set up');
+					})
+					.catch(function (error) {
+						reject('There was error when trying to set up database: ' + error);
+					});
+			}
 		});
 	});
 }
