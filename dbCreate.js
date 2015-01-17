@@ -5,12 +5,8 @@ var db = null;
 function createTableUser() {
 	return db.schema.createTable('user', function (table) {
 		table.increments();
-		table.string('user_id');
-		table.integer('match_id')
-			.unsigned()
-			.references('id')
-			.inTable('match')
-			.onDelete('CASCADE');
+		table.string('user_hash');
+		table.string('slack_id');
 	});
 }
 
@@ -24,7 +20,11 @@ function createTableMatch() {
 function createTablePlayer() {
 	return db.schema.createTable('player', function (table) {
 		table.increments();
-		table.string('user_id');
+		table.integer('user_id')
+			.unsigned()
+			.references('id')
+			.inTable('user')
+			.onDelete('CASCADE');
 		table.integer('match_id')
 			.unsigned()
 			.references('id')
