@@ -1,6 +1,6 @@
 'use strict';
 
-var db = require('./dbConnection');
+var db = require('./connection');
 
 function createTableUser() {
 	return db.schema.createTable('user', function (table) {
@@ -39,6 +39,22 @@ function createTables() {
 		.then(createTablePlayer);
 }
 
-module.exports = {
-	createTables: createTables
-};
+function setup() {
+	return new Promise(function (resolve, reject) {
+		db.schema.hasTable('user').then(function (exists) {
+			if (exists) {
+				reject('Database is already set up');
+			} else {
+				createTables()
+					.then(function () {
+						resolve('Database was set up');
+					})
+					.catch(function (error) {
+						reject('There was error when trying to set up database: ' + error);
+					});
+			}
+		});
+	});
+}
+
+module.exports = setup;

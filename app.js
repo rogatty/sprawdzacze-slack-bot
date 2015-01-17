@@ -4,7 +4,7 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	bot = require('./bot'),
 	db = require('./db'),
-	//config = require('./config.json'),
+	config = require('./config.json'),
 	app = express(),
 	port = process.env.PORT || 3000;
 
@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
 
 // test route
 app.get('/', function (req, res) {
-	res.status(200).send('Stop, you!');
+	res.status(200).send('<html><body><img src="' + config.slapGif + '"></body></html>');
 });
 
 // error handler
@@ -31,8 +31,7 @@ app.listen(port, function () {
 app.post('/bot', bot);
 
 app.get('/setdb', function (req, res) {
-	db
-		.setUp()
+	db.save()
 		.then(function (msg) {
 			res.status(200).send(msg);
 		})

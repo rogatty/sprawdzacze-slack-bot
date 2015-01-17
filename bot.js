@@ -1,7 +1,6 @@
 'use strict';
 
-var //request = require('request'),
-	config = require('./config.json'),
+var config = require('./config.json'),
 	db = require('./db'),
 	stats = require('./stats'),
 	patterns = {
