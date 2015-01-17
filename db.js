@@ -7,8 +7,8 @@ var Promise = require('bluebird'),
 function save(slackIds) {
 	console.log('######## BEGINNING #######', slackIds);
 	saveMatch(slackIds)
-		.then(getUserIds)
-		.then(function (matchId, userIds) {
+		.spread(getUserIds)
+		.spread(function (matchId, userIds) {
 			console.log('########## WE HAVE USER IDS #####', matchId, userIds);
 		})
 		.catch(function (error) {
@@ -27,7 +27,7 @@ function saveMatch(slackIds) {
 			.then(function (rows) {
 				console.log('####### SAVE MATCH RESULT ######', rows[0], slackIds);
 				//rows[0] is match_id
-				resolve(rows[0], slackIds);
+				resolve([rows[0], slackIds]);
 			});
 	});
 }
@@ -42,7 +42,7 @@ function getUserIds(matchId, slackIds) {
 		});
 		console.log('###### ARRAY OF getUserId PROMISES #######', userIds);
 
-		resolve(matchId, Promise.all(userIds));
+		resolve([matchId, Promise.all(userIds)]);
 	});
 }
 
