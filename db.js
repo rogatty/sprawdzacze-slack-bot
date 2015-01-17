@@ -46,29 +46,24 @@ function getUserIds(matchId, slackIds) {
 	});
 }
 
-/*function savePlayers(matchRows, slackIds) {
-	var players = [],
-		matchId = matchRows[0];
+function savePlayers(matchId, userIds) {
+	var players = [];
 
-	slackIds.forEach(function (slackId) {
-		getUserId(slackId)
-			.then(savePlayer);
-
+	userIds.forEach(function (userId) {
 		players.push({
 			match_id: matchId,
-			user_id: slackId
+			user_id: userId
 		});
 	});
 
 	db('player')
-		.returning('id')
 		.insert(players)
 		.then(function (ids) {
 			ids.forEach(function (id) {
-				//console.log('#### playerId', id);
+				console.log('#### SAVED PLAYER ####', id);
 			});
 		});
-}*/
+}
 
 function getUserId(slackId) {
 	console.log('##### GET USER ID #####', slackId);
