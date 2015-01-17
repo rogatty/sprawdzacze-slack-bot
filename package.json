@@ -14,7 +14,8 @@
     "express-promise": "^0.4.0",
     "knex": "^0.7.3",
     "pg": "^4.1.1",
-    "request": "^2.51.0"
+    "request": "^2.51.0",
+    "sha1": "^1.1.0"
   },
   "engines": {
     "node": "0.10.x"
