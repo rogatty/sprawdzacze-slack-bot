@@ -1,11 +1,11 @@
 'use strict';
 
-var db = null;
+var db = require('./dbConnection');
 
 function createTableUser() {
 	return db.schema.createTable('user', function (table) {
 		table.increments();
-		table.string('user_hash');
+		table.string('hash');
 		table.string('slack_id');
 	});
 }
@@ -33,9 +33,7 @@ function createTablePlayer() {
 	});
 }
 
-function createTables(dbConnection) {
-	db = dbConnection;
-
+function createTables() {
 	return createTableUser()
 		.then(createTableMatch)
 		.then(createTablePlayer);

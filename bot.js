@@ -23,6 +23,10 @@ function changePlayers(matches, userId, res) {
 		ids = matches[3].split(' ');
 		numberOfIds = ids.length;
 
+		if (ids.indexOf('<@USLACKBOT>') > -1) {
+			return slap(res);
+		}
+
 		if (numberOfPlayers < numberOfIds) {
 			ids = ids.slice(0, numberOfPlayers);
 		}
@@ -138,6 +142,14 @@ function removePlayers(numberOfPlayers, ids, res) {
 	return res.status(200).json(payload);
 }
 
+function slap(res) {
+	var payload = {
+		text: 'No, you can\'t. Please take that as a warning ' + config.slapGif
+	};
+
+	return res.status(200).json(payload);
+}
+
 function startMatch(res) {
 	var players = getListOfPlayers(state.ids, state.numberOfPlayers),
 		payload = {
@@ -152,7 +164,7 @@ function startMatch(res) {
 			}]
 		};
 
-	db.saveMatch(state.ids);
+	db.save(state.ids);
 
 	state.numberOfPlayers = 0;
 	state.ids = [];

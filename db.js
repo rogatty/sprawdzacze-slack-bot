@@ -1,31 +1,55 @@
 'use strict';
 
-var db = require('knex')({
-		client: 'pg',
-		connection: process.env.DATABASE_URL
-	}),
-	dbCreate = require('./dbCreate'),
-	Promise = require('bluebird');
+var Promise = require('bluebird'),
+	db = require('./dbConnection'),
+	dbCreate = require('./dbCreate');
 
-function saveMatch(ids) {
-	db('match')
-		.returning('id')
-		.insert({
-			date_time: new Date()
-		})
-		.then(function (matchRows) {
-			savePlayers(matchRows, ids);
+function save(slackIds) {
+	saveMatch(slackIds)
+		.then(getUserIds)
+		.then(function (matchId, userIds) {
+			console.log('##########', matchId, userIds);
 		});
+		//.then(savePlayers);
 }
 
-function savePlayers(matchRows, ids) {
+function saveMatch(slackIds) {
+	return new Promise(function (resolve) {
+		db('match')
+			.returning('id')
+			.insert({
+				date_time: new Date()
+			})
+			.then(function (rows) {
+				//rows[0] is match_id
+				resolve(rows[0], slackIds);
+			});
+	});
+}
+
+function getUserIds(matchId, slackIds) {
+	return new Promise(function (resolve) {
+		var userIds = [];
+
+		slackIds.forEach(function (slackId) {
+			userIds.push(getUserId(slackId));
+		});
+
+		resolve(matchId, Promise.all(userIds));
+	});
+}
+
+function savePlayers(matchRows, slackIds) {
 	var players = [],
 		matchId = matchRows[0];
 
-	ids.forEach(function (id) {
+	slackIds.forEach(function (slackId) {
+		getUserId(slackId)
+			.then(savePlayer);
+
 		players.push({
 			match_id: matchId,
-			user_id: id
+			user_id: slackId
 		});
 	});
 
@@ -37,6 +61,36 @@ function savePlayers(matchRows, ids) {
 				//console.log('#### playerId', id);
 			});
 		});
+}
+
+function getUserId(slackId) {
+	return new Promise(function (resolve) {
+		db('user')
+			.where({
+				slack_id: slackId
+			})
+			.then(function (rows) {
+				if (rows.length) {
+					resolve(rows[0].id)
+				} else {
+					resolve(saveUser(slackId));
+				}
+			});
+	});
+}
+
+function saveUser(slackId) {
+	return new Promise(function (resolve) {
+		return db('user')
+			.returning('id')
+			.insert({
+				slack_id: slackId
+			})
+			.then(function (rows) {
+				//return user_id
+				resolve(rows[0]);
+			});
+	});
 }
 
 function getNumberOfMatches(userId) {
@@ -59,7 +113,7 @@ function setUp() {
 				reject('Database is already set up');
 			} else {
 				dbCreate
-					.createTables(db)
+					.createTables()
 					.then(function () {
 						resolve('Database was set up');
 					})
@@ -73,6 +127,6 @@ function setUp() {
 
 module.exports = {
 	getNumberOfMatches: getNumberOfMatches,
-	saveMatch: saveMatch,
+	save: save,
 	setUp: setUp
 };

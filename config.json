@@ -14,5 +14,6 @@
     "`help` - display this help to whole channel, this will be improved and sent as Direct (private) Message.",
     "",
     "_In case of problems with the bot contact @igor_"
-  ]
+  ],
+  "slapGif": "http://media.giphy.com/media/yUWGLXWLPMd44/giphy.gif"
 }
