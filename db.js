@@ -8,13 +8,10 @@ function save(slackIds) {
 	console.log('######## BEGINNING #######', slackIds);
 	saveMatch(slackIds)
 		.spread(getUserIds)
-		.spread(function (matchId, userIds) {
-			console.log('########## WE HAVE USER IDS #####', matchId, userIds);
-		})
+		.spread(savePlayers)
 		.catch(function (error) {
 			console.log(error);
 		});
-		//.then(savePlayers);
 }
 
 function saveMatch(slackIds) {
