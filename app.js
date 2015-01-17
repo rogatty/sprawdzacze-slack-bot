@@ -36,7 +36,7 @@ app.listen(port, function () {
 
 app.route('/bot').post(bot);
 
-app.route('/dashboard/:secret').get(dashboard);
+//app.route('/dashboard/:secret').get(dashboard);
 
 app.route('/setdb')
 	.get(function (req, res) {
