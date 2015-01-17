@@ -5,10 +5,11 @@ var Promise = require('bluebird'),
 	dbCreate = require('./dbCreate');
 
 function save(slackIds) {
+	console.log('######## BEGINNING #######', slackIds);
 	saveMatch(slackIds)
 		.then(getUserIds)
 		.then(function (matchId, userIds) {
-			console.log('##########', matchId, userIds);
+			console.log('########## WE HAVE USER IDS #####', matchId, userIds);
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -24,6 +25,7 @@ function saveMatch(slackIds) {
 				date_time: new Date()
 			})
 			.then(function (rows) {
+				console.log('####### SAVE MATCH RESULT ######', rows[0], slackIds);
 				//rows[0] is match_id
 				resolve(rows[0], slackIds);
 			});
@@ -31,20 +33,20 @@ function saveMatch(slackIds) {
 }
 
 function getUserIds(matchId, slackIds) {
-	console.log('######', matchId, slackIds);
+	console.log('###### GET USER IDS BEGINNING #######', matchId, slackIds);
 	return new Promise(function (resolve) {
 		var userIds = [];
 
 		slackIds.forEach(function (slackId) {
 			userIds.push(getUserId(slackId));
 		});
-		console.log('######', userIds);
+		console.log('###### ARRAY OF getUserId PROMISES #######', userIds);
 
 		resolve(matchId, Promise.all(userIds));
 	});
 }
 
-function savePlayers(matchRows, slackIds) {
+/*function savePlayers(matchRows, slackIds) {
 	var players = [],
 		matchId = matchRows[0];
 
@@ -66,9 +68,10 @@ function savePlayers(matchRows, slackIds) {
 				//console.log('#### playerId', id);
 			});
 		});
-}
+}*/
 
 function getUserId(slackId) {
+	console.log('##### GET USER ID #####', slackId);
 	return new Promise(function (resolve) {
 		db('user')
 			.where({
