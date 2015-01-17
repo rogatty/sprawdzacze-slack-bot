@@ -7,6 +7,7 @@ var express = require('express'),
 
 	bot = require('./lib/bot'),
 	dashboard = require('./lib/dashboard'),
+	stats = require('./lib/stats'),
 	db = require('./lib/db'),
 	config = require('./config.json');
 
@@ -37,6 +38,8 @@ app.listen(port, function () {
 app.route('/bot').post(bot);
 
 //app.route('/dashboard/:secret').get(dashboard);
+
+app.route('/stats/:userId').get(stats);
 
 app.route('/setdb')
 	.get(function (req, res) {
