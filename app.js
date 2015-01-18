@@ -44,7 +44,7 @@ app.route('/')
 
 app.route('/bot').post(bot);
 
-app.route('/slash').post(slash);
+app.route('/slash').get(slash);
 
 app.route('/dashboard/:secret').get(dashboard);
 
