@@ -7,6 +7,7 @@ var express = require('express'),
 	port = process.env.PORT || 3000,
 
 	bot = require('./lib/bot'),
+	slash = require('./lib/slash'),
 	dashboard = require('./lib/dashboard'),
 	stats = require('./lib/stats'),
 	db = require('./lib/db'),
@@ -42,6 +43,8 @@ app.route('/')
 	});
 
 app.route('/bot').post(bot);
+
+app.route('/slash').post(slash);
 
 app.route('/dashboard/:secret').get(dashboard);
 
