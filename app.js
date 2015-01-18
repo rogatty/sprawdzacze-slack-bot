@@ -41,7 +41,7 @@ app.route('/')
 		res.status(200).send('<html><body><img src="' + config.slapGif + '"></body></html>');
 	});
 
-app.route('/bot').post(bot).get(bot);
+app.route('/bot').post(bot);
 
 app.route('/dashboard/:secret').get(dashboard);
 
