@@ -3,6 +3,7 @@
 var express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
+	path = require('path'),
 	port = process.env.PORT || 3000,
 
 	bot = require('./lib/bot'),
@@ -20,7 +21,7 @@ app.use(bodyParser.urlencoded({
 app.use(require('express-promise')());
 
 // static assets
-app.use(express.static(__dirname + '/public'));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'hbs');
 

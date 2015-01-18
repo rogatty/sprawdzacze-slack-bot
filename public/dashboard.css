@@ -1,0 +1,96 @@
+body {
+	background: #374C5D;
+}
+
+h2 {
+	color: #556A7A;
+	font-weight: normal;
+	font-size: 1.2em;
+}
+
+.big {
+	color: #8795A0;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+.panel {
+	background: #1D3446;
+	margin: 20px;
+	padding: 20px;
+	text-align: center;
+}
+
+#dashboard {
+	margin: 0 auto;
+	max-width: 980px;
+}
+
+#refresh {
+	cursor: pointer;
+	position: relative;
+}
+
+/*** CHARTS ***/
+.ct-label {
+	color: #8795A0 !important;
+}
+
+.ct-label.ct-horizontal {
+	text-align: center !important;
+}
+
+.ct-label.ct-vertical {
+	line-height: 30px;
+}
+
+.ct-grid {
+	stroke: #1D3446 !important;
+}
+
+.ct-bar {
+	stroke: #8795A0 !important;
+}
+
+/*** SPINNER ***/
+#spinner {
+	bottom: 27px;
+	height: 40px;
+	position: absolute;
+	right: 21px;
+	width: 40px;
+}
+
+.double-bounce1, .double-bounce2 {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background-color: #8795A0;
+	opacity: 0.6;
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	-webkit-animation: bounce 2.0s infinite ease-in-out;
+	animation: bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+	-webkit-animation-delay: -1.0s;
+	animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+	0%, 100% { -webkit-transform: scale(0.0) }
+	50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bounce {
+	0%, 100% {
+		transform: scale(0.0);
+		-webkit-transform: scale(0.0);
+	} 50% {
+		  transform: scale(1.0);
+		  -webkit-transform: scale(1.0);
+	  }
+}
