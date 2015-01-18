@@ -10,6 +10,7 @@
     "Obviously the same for 3 and 4 and with `-` as operator for removal.",
     "",
     "`status` - display the current status.",
+    "`/stats` - generate private link for dashboard with your stats.",
     "`reset` - reset the current status. _There is no way to remove Anons other than reset._",
     "`help` - display this help to whole channel, this will be improved and sent as Direct (private) Message.",
     "",
