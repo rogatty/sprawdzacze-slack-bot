@@ -1,5 +1,7 @@
 .idea
 node_modules
 public/vendor
+
 lib/db/connection_local.js
 lib/db/connection_heroku.js
+setEnv.js

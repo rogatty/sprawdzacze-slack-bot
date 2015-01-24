@@ -1,6 +1,14 @@
 var charts = {},
 	spinner;
 
+function getUserInfo() {
+	$.get('/user-info/' + secret)
+		.done(function (data) {
+			$('#player-image').attr('src', data.image);
+			$('#player-name').text(data.name);
+		});
+}
+
 function update() {
 	spinner.removeAttr('hidden');
 
@@ -99,6 +107,7 @@ function getChartConfig(options) {
 $(function () {
 	spinner = $('#spinner');
 
+	getUserInfo();
 	update();
 
 	$('#refresh')
