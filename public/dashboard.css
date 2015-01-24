@@ -2,6 +2,12 @@ body {
 	background: #374C5D;
 }
 
+h2 {
+	color: #556A7A;
+	font-weight: normal;
+	font-size: 1.2em;
+}
+
 #dashboard {
 	margin: 0 auto;
 	max-width: 980px;
@@ -9,6 +15,7 @@ body {
 
 .panel {
 	background: #1D3446;
+	box-sizing: border-box;
 	margin: 20px;
 	padding: 20px;
 	text-align: center;
@@ -21,17 +28,20 @@ body {
 
 #player-panel,
 #matches-panel {
-	height: 137px;
+	height: 177px;
 }
 
 #player-panel {
-	display: none;
 	margin-bottom: 40px;
+	padding-top: 28px;
 }
 
-h2 {
-	color: #556A7A;
-	font-weight: normal;
+#matches-panel {
+	padding-top: 34px;
+}
+
+#player-name {
+	color: #8795A0;
 	font-size: 1.2em;
 }
 

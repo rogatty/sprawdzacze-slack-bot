@@ -10,8 +10,15 @@ var express = require('express'),
 	slash = require('./lib/slash'),
 	dashboard = require('./lib/dashboard'),
 	stats = require('./lib/stats'),
+	userInfo = require('./lib/userInfo'),
 	db = require('./lib/db'),
 	config = require('./config.json');
+
+// this file is not in the repo as it holds private keys
+// on Heroku they live in environment variables already
+try {
+	require('./setEnv')();
+} catch (e) {}
 
 // body parser middleware
 app.use(bodyParser.urlencoded({
@@ -49,6 +56,8 @@ app.route('/slash').get(slash);
 app.route('/dashboard/:secret').get(dashboard);
 
 app.route('/stats/:secret').get(stats);
+
+app.route('/user-info/:secret').get(userInfo);
 
 app.route('/setdb')
 	.get(function (req, res) {
