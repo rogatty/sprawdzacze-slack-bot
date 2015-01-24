@@ -1,23 +1,38 @@
-<div id="dashboard" class="pure-g">
-	<div class="pure-u-1">
-		<div id="refresh" class="panel">
-			<h2>Click to refresh</h2>
-			<div id="spinner">
-				<div class="double-bounce1"></div>
-				<div class="double-bounce2"></div>
+<div id="dashboard">
+	<div class="pure-g">
+		<div class="pure-u-1">
+			<div id="refresh" class="panel">
+				<h2>Click to refresh</h2>
+				<div id="spinner">
+					<div class="double-bounce1"></div>
+					<div class="double-bounce2"></div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="pure-u-1 pure-u-md-1-3">
-		<div id="matches-panel" class="panel">
-			<h2>MATCHES</h2>
-			<p id="matches" class="big">0</p>
+	<div class="pure-g">
+		<div class="pure-u-1 pure-u-md-1-3">
+			<div id="player-panel" class="panel">
+				<h2>PLAYER</h2>
+			</div>
+			<div id="matches-panel" class="panel">
+				<h2>MATCHES</h2>
+				<p id="matches" class="big">0</p>
+			</div>
+		</div>
+		<div class="pure-u-1 pure-u-md-2-3">
+			<div id="weekdays-panel" class="panel">
+				<h2>DAY OF WEEK</h2>
+				<div id="weekdays" class="chart-container"></div>
+			</div>
 		</div>
 	</div>
-	<div class="pure-u-1 pure-u-md-2-3">
-		<div id="weekdays-panel" class="panel">
-			<h2>WEEKDAYS</h2>
-			<div id="weekdays" class="ct-chart ct-minor-seventh"></div>
+	<div class="pure-g">
+		<div class="pure-u-1">
+			<div id="hours-panel" class="panel">
+				<h2>TIME OF DAY</h2>
+				<div id="hours" class="chart-container"></div>
+			</div>
 		</div>
 	</div>
 </div>
