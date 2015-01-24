@@ -7,10 +7,14 @@
 	<link rel="stylesheet" href="/public/vendor/pure/pure-min.css">
 	<link rel="stylesheet" href="/public/vendor/pure/grids-responsive-min.css">
 	<link rel="stylesheet" href="/public/dashboard.css">
-	<script>var secret = '{{secret}}';</script>
+	{{#if secret}}<script>var secret = '{{secret}}';</script>{{/if}}
 	<script src="/public/vendor/jQuery/dist/jquery.min.js"></script>
 	<script src="/public/vendor/highcharts/highcharts.js"></script>
+	{{#if secret}}
 	<script src="/public/dashboard.js"></script>
+	{{else}}
+	<script src="/public/dashboardAll.js"></script>
+	{{/if}}
 </head>
 <body>
 {{{body}}}

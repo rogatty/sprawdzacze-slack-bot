@@ -10,9 +10,10 @@
     "Obviously the same for 3 and 4 and with `-` as operator for removal.",
     "",
     "`status` - display the current status.",
-    "`/stats` - generate private link for dashboard with your stats.",
+    "`stats` - display link for the public dashboard.",
+    "`/stats` - generate private link for your dashboard.",
     "`reset` - reset the current status. _There is no way to remove Anons other than reset._",
-    "`help` - display this help to whole channel, this will be improved and sent as Direct (private) Message.",
+    "`help` - display this text.",
     "",
     "Source code is available at https://github.com/rogatty/sprawdzacze-slack-bot"
   ],

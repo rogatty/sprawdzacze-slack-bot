@@ -53,9 +53,9 @@ app.route('/bot').post(bot);
 
 app.route('/slash').get(slash);
 
-app.route('/dashboard/:secret').get(dashboard);
+app.route('/dashboard/:secret?').get(dashboard);
 
-app.route('/stats/:secret').get(stats);
+app.route('/stats/:secret?').get(stats);
 
 app.route('/user-info/:secret').get(userInfo);
 
