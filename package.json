@@ -19,6 +19,10 @@
     "request": "^2.51.0",
     "sha1": "^1.1.0"
   },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-develop-server": "^0.2.5"
+  },
   "engines": {
     "node": "0.10.x"
   },
