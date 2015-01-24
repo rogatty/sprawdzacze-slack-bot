@@ -2,6 +2,33 @@ body {
 	background: #374C5D;
 }
 
+#dashboard {
+	margin: 0 auto;
+	max-width: 980px;
+}
+
+.panel {
+	background: #1D3446;
+	margin: 20px;
+	padding: 20px;
+	text-align: center;
+}
+
+#refresh {
+	cursor: pointer;
+	position: relative;
+}
+
+#player-panel,
+#matches-panel {
+	height: 137px;
+}
+
+#player-panel {
+	display: none;
+	margin-bottom: 40px;
+}
+
 h2 {
 	color: #556A7A;
 	font-weight: normal;
@@ -14,42 +41,8 @@ h2 {
 	font-size: 1.5em;
 }
 
-.panel {
-	background: #1D3446;
-	margin: 20px;
-	padding: 20px;
-	text-align: center;
-}
-
-#dashboard {
-	margin: 0 auto;
-	max-width: 980px;
-}
-
-#refresh {
-	cursor: pointer;
-	position: relative;
-}
-
-/*** CHARTS ***/
-.ct-label {
-	color: #8795A0 !important;
-}
-
-.ct-label.ct-horizontal {
-	text-align: center !important;
-}
-
-.ct-label.ct-vertical {
-	line-height: 30px;
-}
-
-.ct-grid {
-	stroke: #1D3446 !important;
-}
-
-.ct-bar {
-	stroke: #8795A0 !important;
+.chart-container {
+	height: 300px;
 }
 
 /*** SPINNER ***/
