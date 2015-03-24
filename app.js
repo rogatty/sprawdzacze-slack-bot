@@ -4,7 +4,7 @@ var express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
 	path = require('path'),
-	port = process.env.PORT || 3000,
+	port = process.env.OPENSHIFT_NODEJS_PORT || 3000,
 
 	bot = require('./lib/bot'),
 	slash = require('./lib/slash'),
