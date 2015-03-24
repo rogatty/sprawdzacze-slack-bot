@@ -39,8 +39,9 @@ app.use(function (req, res, next, err) {
 	res.status(400).send(err.message);
 });
 
+console.log('Slack bot tries to listen on port ' + port);
 app.listen(port, function () {
-	console.log('Slack bot listening on port ' + port);
+	console.log('Slack bot started listening on port ' + port);
 });
 
 // index
