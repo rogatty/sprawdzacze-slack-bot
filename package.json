@@ -28,6 +28,6 @@
     "node": "0.10.x"
   },
   "scripts": {
-    "postinstall": "bower install"
+    "build": "HOME=$HOME/app-root/runtime bower install --config.interactive=false"
   }
 }
