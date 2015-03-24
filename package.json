@@ -28,6 +28,6 @@
     "node": "0.10.x"
   },
   "scripts": {
-    "build": "HOME=$OPENSHIFT_DATA_DIR bower install --config.interactive=false"
+    "postinstall": "export HOME=$HOME/app-root/runtime/repo; bower install --config.interactive=false"
   }
 }
