@@ -28,6 +28,6 @@
     "node": "0.10.x"
   },
   "scripts": {
-    "build": "HOME=$HOME/app-root/runtime bower install --config.interactive=false"
+    "build": "HOME=$OPENSHIFT_DATA_DIR bower install --config.interactive=false"
   }
 }
