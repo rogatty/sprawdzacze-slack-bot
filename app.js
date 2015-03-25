@@ -4,7 +4,9 @@ var express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
 	path = require('path'),
-	port = process.env.PORT || 3000,
+
+	port = process.env.OPENSHIFT_NODEJS_PORT || 3000,
+	host = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
 
 	bot = require('./lib/bot'),
 	slash = require('./lib/slash'),
@@ -39,8 +41,9 @@ app.use(function (req, res, next, err) {
 	res.status(400).send(err.message);
 });
 
-app.listen(port, function () {
-	console.log('Slack bot listening on port ' + port);
+console.log('Slack bot tries to listen on port ' + port);
+app.listen(port, host, function () {
+	console.log('Slack bot started listening on port ' + port);
 });
 
 // index
